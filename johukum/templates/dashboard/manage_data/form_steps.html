@@ -1,0 +1,72 @@
+<style type="text/css">
+ul.timeline {
+    list-style-type: none;
+    position: relative;
+}
+ul.timeline:before {
+    content: ' ';
+    background: #d4d9df;
+    display: inline-block;
+    position: absolute;
+    left: 29px;
+    width: 2px;
+    height: 100%;
+    z-index: 400;
+}
+ul.timeline > li {
+    margin: 20px 0;
+    padding-left: 50px;
+}
+ul.timeline > li:before {
+    content: ' ';
+    background: white;
+    display: inline-block;
+    position: absolute;
+    border-radius: 50%;
+    border: 3px solid #dddddd;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    z-index: 400;
+}
+ul.timeline > li.done:before {
+    border: 3px solid #1a8eab;
+    background: #22c0e8;
+}
+
+ul.timeline > li.current:before {
+    border: 2px dashed #22c0e8;
+}
+
+</style>
+
+<ul class="timeline">
+    <li class="{% if step == 1 %}current{% elif step > 1 %} done{% endif %}">
+        <a href="#">Location</a>
+        <p class="text-muted">Information about Business Location</p>
+    </li>
+    <li class="{% if step == 2 %}current{% elif step > 2 %} done{% endif %}">
+        <a href="#">Contact</a>
+        <p class="text-muted">Information about Contact Person</p>
+    </li>
+    <li class="{% if step == 3 %}current{% elif step > 3 %} done{% endif %}">
+        <a href="#">Opening Hours</a>
+        <p class="text-muted">Business Opening Hours</p>
+    </li>
+    <li class="{% if step == 4 %}current{% elif step > 4 %} done{% endif %}">
+        <a href="#">Supported Payment Methods</a>
+        <p class="text-muted">Select your supported payment methods</p>
+    </li>
+    <li class="{% if step == 5 %}current{% elif step > 5 %} done{% endif %}">
+        <a href="#">Company</a>
+        <p class="text-muted">About the Company</p>
+    </li>
+    <li class="{% if step == 6 %}current{% elif step > 6 %} done{% endif %}">
+        <a href="#">Business Category</a>
+        <p class="text-muted">Choose appropiate Business categories</p>
+    </li>
+    <li class="{% if step == 7 %}current{% elif step > 7 %} done{% endif %}">
+        <a href="#">Upload Files</a>
+        <p class="text-muted">Upload your Business Logo, Office photographs</p>
+    </li>
+</ul>

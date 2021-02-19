@@ -1,0 +1,256 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize embed_video_tags %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-th"></i> {{ business_info.location.business_name }}</h4>
+{% endblock %}
+
+{% block 'content' %}
+
+    <div class="row" style="margin-bottom:10px">
+        <div class="col-md-12">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <a class="btn btn-primary" href="{% url 'manage_data.update' id=business_info.pk %}"><i class="fa fa-edit"></i> Edit</a>
+                    <a class="btn btn-default" href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=files" ><i class="fa fa-folder"></i> Update Files</a>
+                </div>
+                {% if not request.user.is_agent %}
+                    <form method="POST" class="pull-right">
+                        {% csrf_token %}
+                        <input type="hidden" name='business_info_id' value="{{ business_info.pk }}">
+                        <input type="hidden" name='status' value="{{ business_info.REJECTED }}">
+                        <button type="submit" class="btn btn-default"><i class="fa fa-times"></i> REJECT</button>
+                    </form>
+                    {% if business_info.status == business_info.PENDING or business_info.status == business_info.REJECTED %}
+                        <form method="POST" class="pull-right" style="margin-right:10px">
+                            {% csrf_token %}
+                            <input type="hidden" name='business_info_id' value="{{ business_info.pk }}">
+                            <input type="hidden" name='status' value="{{ business_info.REVIEWED }}">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> REVIEWED</button>
+                        </form>
+                    {% endif %}
+
+                    {% if business_info.status == business_info.REVIEWED %}
+                        {% if request.user.is_admin or request.user.is_editor %}
+                            <form method="POST" class="pull-right" style="margin-right:10px">
+                                {% csrf_token %}
+                                <input type="hidden" name='business_info_id' value="{{ business_info.pk }}">
+                                <input type="hidden" name='status' value="{{ business_info.APPROVED }}">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Approve</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="col-md-12">
+            <div class="box box-widget widget-user">
+                <div class="widget-user-header bg-black" {% if business_info.cover_photo %} style="background: url('{{ business_info.cover_photo.url }}') center center;" {% endif %}>
+                    <h3 class="widget-user-username">{{ business_info.location.business_name }}</h3>
+                    <span class="label
+                        {% if business_info.status == business_info.PENDING %} label-warning
+                        {% elif business_info.status == business_info.REVIEWED %} label-primary
+                        {% elif business_info.status == business_info.APPROVED %} label-success
+                        {% else %} label-default {% endif %}">
+                        {{ business_info.get_status_display }}
+                    </span>
+                </div>
+                <div class="widget-user-image">
+                    {% if business_info.logo %}<img src="{{ business_info.logo.url }}" alt="Business Logo">{% endif %}
+                </div>
+                <div class="box-footer">
+
+                        <strong>
+                            <i class="fa fa-map-marker margin-r-5"></i> Location
+{#                            <a href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=location" ><i class="fa fa-edit"></i></a>#}
+                        </strong>
+
+                        <p class="text-muted">
+
+                            <p>Building: {{ business_info.location.building }}</p>
+                            <p>Street: {{ business_info.location.street }}</p>
+                            <p>Land Mark: {{ business_info.location.land_mark }}</p>
+                            <p>Area: {{ business_info.location.area }}</p>
+                            <p>Post Code: {{ business_info.location.postcode }}</p>
+                            <p>Plus Code: {{ business_info.location.plus_code }}</p>
+                            {{ business_info.location.to_string }}
+                            <p><strong>GEO:</strong>
+                                <span>{{ business_info.location.geo.coordinates }}</span>
+                            </p>
+                        </p>
+
+                        <hr>
+
+                        <strong>
+                            <i class="fa fa-folder-o margin-r-5"></i> Uploads
+                        </strong>
+
+                        <div class="row" style="margin-top:10px; margin-bottom:10px">
+                        {% for image in business_info.photos.all %}
+                            <div class="col-md-6">
+                                <img src="{{ image }}" class="img-responsive" />
+                            </div>
+                        {% endfor %}
+                        </div>
+
+                        {% for video in business_info.videos.all %}
+                            <div class="bounding_box">
+                                <video width="320" height="240" controls>
+                                 <iframe class="embed-responsive-item" src="{{ video }}"></iframe>
+                                </video>
+                            </div>
+                        {% endfor %}
+
+                        {% if business_info.embed_video %}
+                            {% video business_info.embed_video %}
+                        {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Contact Person</h3>
+{#                        <a href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=contact" class="pull-right"><i class="fa fa-edit"></i></a>#}
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <p>Name: {{ business_info.contact.title }} {{ business_info.contact.name }}</p>
+                        <p>Designation: {{ business_info.contact.designation }}</p>
+                        <p>Email: {{ business_info.contact.email }}</p>
+                        <p>Contact Numbers:
+                            <ul>
+                            {% for contact_number in business_info.contact.mobile_numbers %}
+                                <li>{{ contact_number.mobile_number}}
+                                {% if not contact_number.verified %}
+                                    <i class="fa fa-warning text-warning"></i>
+                                    <a href="{% url 'manage_data.verify_mobile' id=business_info.pk mni=forloop.counter0 %}">Verify</a>
+                                    {% if request.user.is_editor %}
+                                        <a href="{% url 'manage_data.verify' id=business_info.pk mni=forloop.counter0 %}">Verify without otp</a>
+                                    {% endif %}
+                                {% else %}
+                                    <i class="fa fa-check text-success"></i>
+                                {% endif %}
+                                </li>
+                            {% endfor %}
+                            </ul>
+                        </p>
+                        <p>Landline: {{ business_info.contact.landline_no }}</p>
+                        <p>Fax: {{ business_info.contact.fax_no }}</p>
+                        <p>Website: {{ business_info.contact.website }}</p>
+                        <p>Facebook: {{ business_info.contact.social_link }}</p>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Hours of Operation</h3>
+{#                        <a href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=hoop" class="pull-right"><i class="fa fa-edit"></i></a>#}
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <p>Monday: {{ business_info.hours_of_operation.monday }}</p>
+                        <p>Tuesday: {{ business_info.hours_of_operation.tuesday }}</p>
+                        <p>Wednesday: {{ business_info.hours_of_operation.wednesday }}</p>
+                        <p>Thursday: {{ business_info.hours_of_operation.thursday }}</p>
+                        <p>Friday: {{ business_info.hours_of_operation.friday }}</p>
+                        <p>Saturday: {{ business_info.hours_of_operation.saturday }}</p>
+                        <p>Sunday: {{ business_info.hours_of_operation.sunday }}</p>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+
+
+            <div class="col-md-4">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Accepted Payment Methods</h3>
+{#                        <a href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=payment" class="pull-right"><i class="fa fa-edit"></i></a>#}
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        {% for item in business_info.accepted_payment_methods.all %}
+                            <span class="label label-default">{{ item.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+
+            <div class="col-md-4">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Business Keywords</h3>
+{#                        <a href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=categories" class="pull-right"><i class="fa fa-edit"></i></a>#}
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        {% for item in business_info.keywords.all %}
+                            <span class="label label-default">{{ item.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Company Info</h3>
+{#                    <a href="{% url 'manage_data.edit' %}?id={{ business_info.pk }}&wizard=company" class="pull-right"><i class="fa fa-edit"></i></a>#}
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <p>Year of Establishment: {{ business_info.year_of_establishment }}</p>
+                    <p>Annual Turnover: {{ business_info.annual_turnover }}</p>
+                    <p>No of Employees: {{ business_info.no_of_employees }}</p>
+                    <p>Professional Associations:
+                        {% for item in business_info.professional_associations.all %}
+                            <span class="label label-default">{{ item.name }}</span>
+                        {% endfor %}
+                    </p>
+                    <p>Certifications:
+
+                        {% for item in business_info.certifications.all %}
+                            <span class="label label-default">{{ item.name }}</span>
+                        {% endfor %}
+                    </p>
+                    <hr />
+                    {{ business_info.description|safe }}
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

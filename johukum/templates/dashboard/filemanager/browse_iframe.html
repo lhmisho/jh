@@ -1,0 +1,28 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load i18n %}
+{% load humanize %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-sitemap"></i> Filemanager</h4>
+{% endblock %}
+
+{% block 'content' %}
+    <style type="text/css">
+        .well {
+            padding: 0px;
+        }
+        #admin_iframe {
+            min-height: 800px;
+            border:none;
+        }
+
+    </style>
+    <div class="table-header">
+        <h2>Root</h2>
+    </div>
+    <div class="well">
+        <iframe id="admin_iframe" src="{{ iframe_url }}" width="100%" height="100%"></iframe>
+
+    </div>
+{% endblock %}

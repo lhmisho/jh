@@ -1,0 +1,39 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks %}
+{% block 'enctype' %} enctype="multipart/form-data" {% endblock %}
+{% block 'custom_layout' %}
+
+    <div class="input-group" style="margin-bottom:20px">
+        <label>Logo</label>
+        {% render_field form.logo class='form-control' %}
+    </div>
+
+    <div class="input-group" style="margin-bottom:20px">
+        <label>Cover Photo</label>
+        {% render_field form.cover_photo class='form-control' %}
+    </div>
+
+    <div class="input-group" style="margin-bottom:20px">
+        <label>Photos</label>
+        {% render_field form.photo1 class='form-control' %}
+        {% render_field form.photo2 class='form-control' %}
+        {% render_field form.photo3 class='form-control' %}
+        {% render_field form.photo4 class='form-control' %}
+        {% render_field form.photo5 class='form-control' %}
+        {% render_field form.photo6 class='form-control' %}
+        {% render_field form.photo7 class='form-control' %}
+        {% render_field form.photo8 class='form-control' %}
+        {% render_field form.photo9 class='form-control' %}
+        {% render_field form.photo10 class='form-control' %}
+    </div>
+
+    <div class="input-group" style="margin-bottom:20px">
+        <label>Company Video</label>
+        {% render_field form.video class='form-control' %}
+    </div>
+
+    <div class="input-group" style="margin-bottom:20px">
+        <label>Embed Video (Youtube / Vimeo etc) Url</label>
+        {% render_field form.embed_video class='form-control' %}
+    </div>
+{% endblock %}

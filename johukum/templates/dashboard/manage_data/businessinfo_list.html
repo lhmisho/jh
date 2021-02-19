@@ -1,0 +1,18 @@
+{% extends 'layouts/two_column.html' %}
+{% load humanize static %}
+
+{% block 'content-header' %}
+    <h4><i class="fa fa-sitemap"></i> Business Information</h4>
+{% endblock %}
+
+{% block 'content' %}
+    <div id="listView"></div>
+    {% csrf_token %}
+{% endblock %}
+
+{% block 'js' %}
+    <script type="text/javascript" src="{% static 'js_apps/businessDataList.js' %}"></script>
+    <script type="text/javascript">
+        new BusinessDataList(document.getElementById('listView'), '{{request.user.is_admin}}' == 'True')
+    </script>
+{% endblock %}

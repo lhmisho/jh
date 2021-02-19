@@ -1,0 +1,59 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks static custom_tags %}
+
+{% block 'title' %}{% endblock %}
+{% block 'css' %}
+    <link rel="stylesheet" href="{% static 'plugins/timepicker/bootstrap-timepicker.min.css' %}" />
+{% endblock%}
+
+{% block 'custom_layout' %}
+{{ form.management_form }}
+
+<div class="row">
+        <div class="col-xs-12">
+            <!-- <div class="form-group">
+                <label for="id_display_hours_of_operation">
+                    <input type="checkbox" name="display_hours_of_operation" id="id_display_hours_of_operation" checked>
+                    Display Hours Of Operation
+                </label>
+            </div> -->
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Day</th>
+                        <th>Open 24h</th>
+                        <th>Opens From</th>
+                        <th>Closes At</th>
+                        <th>Leisure Start</th>
+                        <th>Leisure End</th>
+                        <th>Closed</th>
+                    </tr>
+                {% for frm in form %}
+                <tr>
+                    <td>{{ forloop.counter0|number_to_day }}</td>
+                    <td>{% render_field frm.open_24h %}</td>
+                    <td>{% render_field frm.open_from class='timepicker' %}</td>
+                    <td>{% render_field frm.open_till class='timepicker' %}</td>
+                    <td>{% render_field frm.leisure_start class='timepicker' %}</td>
+                    <td>{% render_field frm.leisure_end class='timepicker' %}</td>
+                    <td>{% render_field frm.close class='timepicker' %}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block 'js' %}
+    <script type="text/javascript" src="{% static 'plugins/timepicker/bootstrap-timepicker.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.timepicker').timepicker({
+                showInputs: false
+            })
+        })
+    </script>
+{% endblock%}

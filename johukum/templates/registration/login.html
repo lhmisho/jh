@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block 'body-classes' %} hold-transition login-page {% endblock %}
+
+{% block 'body' %}
+
+<div class="login-box">
+    <div class="login-logo">
+      <a href="/"><b>Jo</b> Hukum</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+      <p class="login-box-msg">Sign in to start your session</p>
+      {% include 'partials/form_errors.html' %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group has-feedback">
+          <input type="text" name="username" class="form-control" placeholder="Username">
+          <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input type="password" name="password" class="form-control" placeholder="Password">
+          <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        </div>
+        <div class="row">
+          
+          <!-- /.col -->
+          <div class="col-xs-4">
+            <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+          </div>
+          <div class="col-xs-8" style="text-align:right">
+              <a href="{% url 'password_reset' %}">Forgot Password?</a><br>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+  
+     
+      <!-- <a href="register.html" class="text-center">Register a new membership</a> -->
+  
+    </div>
+    <!-- /.login-box-body -->
+  </div>
+{% endblock %}

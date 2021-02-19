@@ -1,0 +1,75 @@
+<header class="main-header">
+    <!-- Logo -->
+    <a href="/" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini">JH</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Jo</b> Hukum</span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">  
+              <a href="#">
+                <i class="fa 
+                {% if request.user.is_agent %} 
+                    fa-user-secret
+                {% elif request.user.is_gco %}
+                    fa-user-md
+                {% elif request.user.is_moderator %}
+                    fa-shield
+                {% elif request.user.is_editor %}
+                    fa-unlock-alt
+                {% else %}
+                    fa-user
+                {% endif %}" style="margin-right:10px"></i> {{ request.user }} (
+               
+                    {% if request.user.is_agent %} 
+                        Agent
+                    {% elif request.user.is_gco %}
+                        GCO
+                    {% elif request.user.is_moderator %}
+                        Moderator
+                    {% elif request.user.is_editor %}
+                        Editor
+                    {% elif request.user.is_superuser %}
+                        Admin
+                    {% else %}
+                        User
+                    {% endif %}
+                )
+              
+              </a>
+        </li>
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-cogs"></i><span></span>
+            </a>
+            <ul class="dropdown-menu">
+              
+              <!-- User image -->
+              <li class="nav-item">
+                <a href="{% url 'profile' %}"><i class="fa fa-sliders"></i> Profile</a>
+              </li>
+              <li class="nav-item">
+                  <a href="{% url 'two_factor_settings_view' %}"><i class="fa fa-lock"></i> Two Factor Auth</a>
+              </li>
+              <li>
+                <a href="{% url 'logout' %}"><i class="fa fa-sign-out"></i> Logout</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>

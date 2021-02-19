@@ -1,0 +1,69 @@
+
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+        <span class="info-box-icon bg-info"><i class="fa fa-mobile-phone"></i></span>
+
+        <div class="info-box-content">
+            <span class="info-box-text">Mobile data added</span>
+            <span class="info-box-number">{{ totoal_mobile_data }}</span>
+        </div>
+        <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-user-secret"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Business data added</span>
+                <span class="info-box-number">{{ total_added }}</span>
+            </div>
+        </div>
+    </div>
+    {% if not request.user.is_moderator %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-info"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Pending</span>
+                <span class="info-box-number">{{ total_pending }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="fa fa-info"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Reviewed</span>
+                <span class="info-box-number">{{ total_reviewed }}</span>
+            </div>
+        </div>
+    </div>
+    {% if not request.user.is_moderator %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="fa fa-user-md"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Approved</span>
+                <span class="info-box-number">{{ total_approved }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-shield"></i></span>
+
+            <div class="info-box-content">
+                <span class="info-box-text">Rejected</span>
+                <span class="info-box-number">{{ total_rejected }}</span>
+            </div>
+        </div>
+    </div>
+</div>

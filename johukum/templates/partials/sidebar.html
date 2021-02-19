@@ -1,0 +1,120 @@
+<aside class="main-sidebar">
+    <section class="sidebar">
+        <ul class="sidebar-menu tree" data-widget="tree">
+            <li class="header">MAIN NAVIGATION</li>
+            <li>
+                <a href="{% url 'dashboard' %}">
+                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'manage_data.index' %}">
+                    <i class="fa fa-th"></i> <span>Business Data</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'mobile_data.index' %}">
+                    <i class="fa fa-phone"></i> <span>Mobile Number Data</span>
+                </a>
+            </li>
+            {% if request.user.is_admin %}
+            <li class="header">User Management</li>
+            <li>
+                <a href="{% url 'users.index' role=AGENT_GROUP %}">
+                    <i class="fa fa-user-secret"></i> <span>Agents</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'users.index' role=GCO_GROUP %}">
+                    <i class="fa  fa-user-md"></i> <span>GCOs</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'users.index' role=MODERATOR_GROUP %}">
+                    <i class="fa fa-shield"></i> <span>Moderators</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'users.index' role=EDITOR_GROUP %}">
+                    <i class="fa fa-unlock-alt"></i> <span>Editors</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'users.index' role=ADMIN_GROUP %}">
+                    <i class="fa fa-lock"></i> <span>Admins</span>
+                </a>
+            </li>
+
+            <li class="header">Reports</li>
+            <li>
+                <a href="{% url 'reports.index' %}">
+                    <i class="fa fa-bar-chart"></i> <span>Business Info Agent Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'mobile_reports.index' %}">
+                    <i class="fa fa-bar-chart"></i> <span>Mobile Data Agent Report</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'editor_reports.index' %}">
+                    <i class="fa fa-bar-chart"></i> <span>Business Info Editor Report</span>
+                </a>
+            </li>
+            <li class="header">Settings</li>
+            <li>
+                <a href="{% url 'slider.index' %}?location_type=">
+                    <i class="fa fa-map-marker"></i> <span>Slider</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'locations.index' %}?location_type=">
+                    <i class="fa fa-map-marker"></i> <span>Locations</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'categories.index' %}">
+                    <i class="fa fa-sitemap"></i> <span>Categories</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'payment_methods.index' %}">
+                    <i class="fa fa-usd"></i> <span>Payment Methods</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'professional_associations.index' %}">
+                    <i class="fa fa-anchor"></i> <span>Professional Associations</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'certifications.index' %}">
+                    <i class="fa fa-certificate"></i> <span>Certifications</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'extensions-browse' %}">
+                    <i class="fa fa-certificate"></i> <span>File manager</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if user.is_gco %}
+            <li>
+                <a href="{% url 'users.index' role=AGENT_GROUP %}">
+                    <i class="fa fa-user-secret"></i> <span>Agents</span>
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="{% url 'logout' %}">
+                    <i class="fa fa-sign-out"></i> <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

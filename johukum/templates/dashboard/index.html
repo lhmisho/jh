@@ -1,0 +1,11 @@
+{% extends 'layouts/two_column.html' %}
+
+{% block 'content' %}
+
+    {% if request.user.is_admin %}
+        {% include 'dashboard/super_user_dashboard.html' %}
+    {% else %}
+        {% include 'dashboard/agent_dashboard.html' %}
+    {% endif %}
+    
+{% endblock %}

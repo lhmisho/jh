@@ -1,0 +1,174 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks %}
+
+{% block 'custom_layout' %}
+    <div class="form-group">
+        <label>{{ form.business_name.label }}</label>
+        {% render_field form.business_name class="form-control" %}
+    </div>
+
+    <div class="form-group">
+        <label>{{ form.building.label }}</label>
+        {% render_field form.building class="form-control" %}
+    </div>
+
+    <div class="form-group">
+        <label>{{ form.street.label }}</label>
+        {% render_field form.street class="form-control" %}
+    </div>
+
+    <div class="form-group">
+        <label>{{ form.land_mark.label }}</label>
+        {% render_field form.land_mark class="form-control" %}
+    </div>    
+
+    <div class="row">
+        <div class="col-md-4 col-sm-12 form-group">
+            <div class="form-group">
+                <label>{{ form.division.label }}</label>
+                {% render_field form.division id="division" class="form-control" %}
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12 form-group">
+            <label>{{ form.city.label }}</label>
+            {% render_field form.city id="city" class="form-control" %}
+        </div>
+        
+        <div class="col-md-4 col-sm-12 form-group">
+            <label>{{ form.thana.label }}</label>
+            {% render_field form.thana id="thana" class="form-control" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-12 form-group">
+            <label>{{ form.postcode.label }}</label>
+            {% render_field form.postcode id="postcode" class="form-control" %}
+        </div>
+        <div class="col-md-8 col-sm-12 form-group">
+            <label>{{ form.area.label }}</label>
+            {% render_field form.area id="area" class="form-control" %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 form-group">
+            <label>{{ form.plus_code.label }}</label>
+            {% render_field form.plus_code class="form-control" id='plus_code' %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label>{{ form.lat.label }}</label>
+                    {% render_field form.lat class="form-control" readonly=True id='lat' %}
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label>{{ form.lon.label }}</label>
+                    {% render_field form.lon class="form-control" readonly=True id='long' %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 form-group">
+            <label></label>
+            <button type="button" id="getCurrentLocation" class="btn btn-sm btn-default">Get Current Location</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="map"></div>
+        </div>
+    </div>
+    
+
+{% endblock %}
+
+{% block 'js' %}
+<script type="text/javascript">
+
+    function getCurrentLocation() {
+        var latElem = document.querySelector('#lat')
+        var longElem = document.querySelector('#long')
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                
+                // x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+        function showPosition(position) {
+            latElem.value = position.coords.latitude
+            longElem.value = position.coords.longitude
+            // x.innerHTML = "Latitude: " + position.coords.latitude + 
+            // "<br>Longitude: " + position.coords.longitude; 
+        }
+        getLocation()
+    }
+    document.querySelector('#getCurrentLocation').addEventListener('click', getCurrentLocation)
+    
+
+    // var map;
+    // function initMap() {
+    //     var elem = document.getElementById('map')
+    //     elem.style = "min-width: 400px;min-height: 400px;"
+
+    //     map = new google.maps.Map(elem, {
+    //         center: {lat: -34.397, lng: 150.644},
+    //         zoom: 8
+    //     });
+    // }
+
+
+
+    var LOCATION_URL = '/api/v1/locations/'
+    function get_location_data(parent, location_type, callback) {
+        fetch(LOCATION_URL + '?parent='+parent+'&location_type='+location_type, {credentials: "same-origin"})
+        .then(function(response) {
+            return response.json()
+        }).then(function(data) {
+            callback(data)
+        })
+    } 
+
+    function result_to_options(result) {
+        var options = ''
+        for(var i = 0; i<result.results.length; i++) {
+            options += `<option value='${result.results[i]._id}'>${result.results[i].name}</option>`
+        }
+        return options
+    }
+    
+    function change_city(e) {
+        var selected_division = $('#division :selected').val()
+        get_location_data(selected_division, 2, function (data) {
+            var options = result_to_options(data)
+            $('#city').html(options)
+            change_thana()
+        }) 
+        
+    }
+
+    function change_thana(e) {
+        var selected_city = $('#city').val()
+        get_location_data(selected_city, 4, function (data) {
+            var options = result_to_options(data)
+            $('#thana').html(options)
+        }) 
+    }
+
+    $(document).ready(function () {
+        
+        // change city on division change
+        $('#division').change(change_city)
+
+        // change thana on city change
+        $('#city').change(change_thana)
+    })
+
+</script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARLJBKcxL-NfKpwRiIP_SV3ngr9dHm0Fo&callback=initMap"
+async defer></script> -->
+{% endblock %}
+

@@ -1,0 +1,47 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+djongo = {version = "*",extras = ["json"]}
+django-crispy-forms = "*"
+django-widget-tweaks = "*"
+django-mptt = "*"
+django-formtools = "*"
+django-treebeard = "*"
+django-countries = "*"
+django-extensions = "*"
+"django-select2" = "*"
+django-taggit = "*"
+djangorestframework = "*"
+django-filter = "*"
+django-filer = "==1.4"
+"django-tables2" = "*"
+django-hijack = "*"
+django-hijack-admin = "*"
+zero_auth = {git = "https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/shimul/zero-auth.git",editable = true}
+dit_common_core = {git = "https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/web/dit-common-core.git",editable = true}
+dit_sms_addon = {git = "https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/web/dit_sms_addon.git",editable = true}
+dit_email_addon = {git = "https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/web/dit_email_addon.git",editable = true}
+pillow = "*"
+django-embed-video = "*"
+pyotp = "*"
+phonenumbers = "*"
+django-phonenumber-field = "*"
+pylint = "*"
+django-redis = "*"
+django-cors-headers = "*"
+hypereditor = {git = "https://github.com/DivineITLimited/django-hyper-editor.git",editable = true}
+django = "==2.0"
+easy-thumbnails = "*"
+django-rest-auth = "*"
+pymongo = "==2.7.1"
+openlocationcode = "*"
+
+[dev-packages]
+pylint = "<2.0.0"
+"autopep8" = "*"
+
+[requires]
+python_version = "3.6"

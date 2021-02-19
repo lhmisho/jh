@@ -1,0 +1,20 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize widget_tweaks static %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-th"></i> Add Business Info</h4>
+{% endblock %}
+
+{% block 'content' %}
+    {% csrf_token %}
+    <div id="businessInfoWizard"></div>
+{% endblock %}
+
+{% block 'js' %}
+    <script type="text/javascript" src="{% static 'js_apps/businessDataAdd.js' %}"></script>
+    <script type="text/javascript">
+        var csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0]
+        new BusinessDataAdd(document.getElementById('businessInfoWizard'), csrf_token.value)
+    </script>
+{% endblock %}

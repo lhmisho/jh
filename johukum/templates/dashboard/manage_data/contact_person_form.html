@@ -1,0 +1,152 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks custom_tags %}
+
+{% block 'custom_layout' %}
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="form-group">
+                <label>{{ form.title.label }}</label>
+                {% render_field form.title class="form-control" %}
+            </div>
+        </div>
+        <div class="col-sm-10">
+            <div class="form-group">
+                <label>{{ form.name.label }}</label>
+                {% render_field form.name class="form-control" %}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>{{ form.designation.label }}</label>
+        {% render_field form.designation class="form-control" %}
+    </div>
+
+{#    <div class="form-group">#}
+{#        <label>{{ form.mobile_no.label }} (Deprecated. Will be removed)</label>#}
+{#        {% render_field form.mobile_no class="form-control" %}#}
+{#    </div>#}
+
+
+    <div class="form-group">
+        <label>Mobile Number</label>
+        <div class="row">
+            <div class="col-sm-9">
+                <input type="text" class="form-control" name="mobile_number_input" />
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-info btn-sm" id="addNumber" type="button"><i class="fa fa-plus"></i></button>
+            </div>
+        </div>
+        <ul class="list-group" id="selectedNumbers" style="margin-top:10px">
+        </ul>
+    </div>
+    <div class="row">
+
+        <div class="form-group col-sm-6">
+            <label>{{ form.landline_no.label }}</label>
+            {% render_field form.landline_no class="form-control" %}
+        </div>
+        <div class="col-sm-6 form-group">
+            <label>{{ form.fax_no.label }}</label>
+            {% render_field form.fax_no class="form-control" %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>{{ form.email.label }}</label>
+            {% render_field form.email class="form-control" %}
+        </div>
+        <div class="form-group col-sm-6">
+            <label>{{ form.website.label }}</label>
+            {% render_field form.website class="form-control" %}
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Facebook</label>
+            {% render_field form.social_link class="form-control" %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block 'js' %}
+<script type="text/javascript">
+    var NUMBERS = []
+    var VERIFY_URL = '/api/v1/validate_phone_number'
+    function build_item(number) {
+        return `
+            <li class="list-group-item">
+                ${number}
+                <input type="hidden" name="mobile_numbers[]" value="${number}" />
+                <button type="button" class="btn-xs btn-danger pull-right" onclick="remove_number('${number}')">
+                    <i class="fa fa-times"></i>
+                </button>
+            </li>
+        `
+    }
+
+    function remove_number(number) {
+        var index = NUMBERS.indexOf(number);
+        if (index > -1) {
+            NUMBERS.splice(index, 1);
+            build()
+        }
+    }
+
+    function build() {
+        var html_to_add = ''
+        for(var i=0; i<NUMBERS.length; i++){
+            html_to_add += build_item(NUMBERS[i])
+        }
+        $('#selectedNumbers').html(html_to_add)
+    }
+
+    function add_number_from_input() {
+        var val = $('input[name=mobile_number_input]').val()
+        val = val.trim()
+        if (val != '' && NUMBERS.indexOf(val) == -1) {
+            fetch(VERIFY_URL + '?phone_number='+val, {
+                credentials: 'same-origin'
+            }).then(function(response) {
+                return response.json()
+            }).then(function (response) {
+                if (response.valid) {
+                    NUMBERS.push(val)
+                    $('input[name=mobile_number_input]').val('')
+                    build()
+                }
+            })
+        }
+    }
+    $(document).ready(function() {
+
+
+        $('input[name=mobile_number_input]').keypress(function(event) {
+            if(event.keyCode == 13){
+                event.preventDefault()
+                add_number_from_input()
+            }
+        })
+
+        $('#addNumber').on('click', function() {
+            add_number_from_input()
+        })
+
+        {% if form.instance %}
+            {% for contact_number in form.instance.mobile_numbers %}
+                NUMBERS.push('{{ contact_number.mobile_number }}')
+            {% endfor %}
+            build()
+        {% endif %}
+
+        {% if request.POST %}
+            {% call_method request.POST 'getlist' 'mobile_numbers[]' as lst %}
+            NUMBERS = {{ lst|safe }}
+            build()
+        {% endif %}
+    })
+</script>
+
+{% endblock %}

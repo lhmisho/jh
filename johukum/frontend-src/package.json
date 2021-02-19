@@ -1,0 +1,52 @@
+{
+  "name": "frontend-src",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack --mode development --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-runtime": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "css-loader": "^2.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.29.6",
+    "webpack-bundle-analyzer": "^3.1.0",
+    "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.3.4",
+    "axios": "^0.18.0",
+    "bootstrap-daterangepicker": "^3.0.5",
+    "dayjs": "^1.8.9",
+    "filepond": "^4.2.0",
+    "filepond-plugin-file-validate-type": "^1.2.2",
+    "filepond-plugin-image-preview": "^4.0.3",
+    "filepond-plugin-image-resize": "^2.0.2",
+    "htm": "^2.1.1",
+    "immer": "^2.1.0",
+    "is_js": "^0.9.0",
+    "jquery": "^3.4.1",
+    "linkstate": "^1.1.1",
+    "moment": "^2.24.0",
+    "preact": "^8.4.2",
+    "preact-compat": "^3.18.4",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.3.0",
+    "querystring": "^0.2.0",
+    "react-bootstrap-daterangepicker": "^4.1.0",
+    "react-filepond": "^7.0.1",
+    "react-geolocated": "^2.4.1",
+    "react-loader-spinner": "^2.3.0",
+    "react-select": "^2.4.1",
+    "store": "^2.0.12",
+    "unistore": "^3.2.1"
+  }
+}

@@ -1,0 +1,33 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks %}
+
+{% block 'custom_layout' %}
+    <div class="form-group">
+        <label>{{ form.year_of_establishment.label }}</label>
+        {% render_field form.year_of_establishment class="form-control" %}
+    </div>
+    <div class="form-group">
+        <label>{{ form.annual_turnover.label }}</label>
+        {% render_field form.annual_turnover class="form-control" %}
+    </div>
+    
+    <div class="form-group">
+        <label>{{ form.no_of_employees.label }}</label>
+        {% render_field form.no_of_employees class="form-control" %}
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label>{{ form.professional_associations.label }}</label>
+            {% render_field form.professional_associations class="form-control" %}
+        </div>
+        <div class="form-group col-sm-6">
+            <label>{{ form.certifications.label }}</label>
+            {% render_field form.certifications class="form-control" %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label>{{ form.description.label }}</label>
+        {% render_field form.description class='form-control' %}
+    </div>
+{% endblock %}

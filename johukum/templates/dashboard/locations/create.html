@@ -1,0 +1,99 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize widget_tweaks %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-sitemap"></i> New Location</h4>
+{% endblock %}
+
+{% block 'content' %}
+
+<div class="row">
+    <div class="col-xs-12 col-md-4 col-md-offset-4">
+        <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Create New Location</h3>
+
+            <div class="box-tools">
+                <a href="{% url 'locations.index' %}?location_type=" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-grid"></i> List
+                </a>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+            {% include 'partials/form_errors.html' %}
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post">
+                        {% csrf_token %}
+        
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label>{{ field.label }}</label>
+                                {% render_field field class="form-control" %}
+                            </div>
+                        {% endfor %}
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block 'js' %}
+<script type="text/javascript">
+
+    var LOCATION_URL = '/api/v1/locations/'
+    var parent_map = {
+        '1': null, // country - no parent
+        '7': 1, // Division - Country
+        '2': 7, // City - Division
+        '4': 2, // Thana - City
+        '6': 4, // Postoffice - Thana
+        '3': 4, // Area - Thana
+        '5': 4, // Postcode - Thana
+    }
+
+    function get_location_data(location_type, callback) {
+        fetch(LOCATION_URL + '?location_type='+location_type, {credentials: "same-origin"})
+        .then(function(response) {
+            return response.json()
+        }).then(function(data) {
+            callback(data)
+        })
+    } 
+    
+    function result_to_options(result) {
+        var options = ''
+        for(var i = 0; i<result.results.length; i++) {
+            options += `<option value='${result.results[i]._id}'>${result.results[i].name}</option>`
+        }
+        return options
+    }
+
+    $(document).ready(function() {
+        $('#id_location_type').change(function(){
+            var selected_type = $('#id_location_type :selected').val()
+            if (parent_map[selected_type]) {
+                get_location_data(parent_map[selected_type], function (data) {
+                    var options = result_to_options(data)
+                    $('#id_parent').html(options)
+                    change_thana()
+                }) 
+            } else {
+                $('#id_parent').html('')
+            }
+        })
+    })
+</script>
+{% endblock %}

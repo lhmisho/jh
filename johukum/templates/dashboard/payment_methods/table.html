@@ -1,0 +1,48 @@
+{% extends 'layouts/two_column.html' %}
+{% load django_tables2 widget_tweaks %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-marker"></i> Payment Methods</h4>
+{% endblock %}
+
+{% block 'content' %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Payment Method List</h3>
+
+            <div class="box-tools">
+                <a href="{% url 'payment_methods.create' %}" class="btn btn-primary btn-sm pull-right" style="margin-left:10px">
+                    <i class="fa fa-plus"></i> New
+                </a>
+                {% if filter %}
+                    <form action="" method="get" class="form form-inline pull-right">
+                        {% for field in filter.form %}
+                        <div class="form-group">
+                            <label>{{ field.label }}</label>
+                            {% render_field field class='form-control' %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-default">Filter</button>
+                    </form>
+                {% endif %}
+                
+            </div>
+        </div>
+        <!-- /.box-header -->
+
+
+        <div class="box-body table-responsive no-padding">
+            
+            {% render_table table %}            
+        </div>
+
+    </div>
+        <!-- /.box -->
+    </div>
+    </div>
+
+
+
+{% endblock %}

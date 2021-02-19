@@ -1,0 +1,89 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-th"></i> Users</h4>
+{% endblock %}
+
+{% block 'content' %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">{{ role }} List</h3>
+
+            <div class="box-tools">
+                <a href="{% url 'users.create' role=role %}" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-plus"></i> New
+                </a>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+                <tbody>
+                <tr>
+                    <th>
+                        First Name
+                    </th>
+                    <th>
+                        Last Name
+                    </th>
+                    <th>
+                        Username
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th></th>
+                </tr>
+                {% for obj in object_list %}
+                    <tr>
+                        <td>{{ obj.first_name }}</td>
+                        <td>{{ obj.last_name }}</td>
+                        <td>{{ obj.username }}</td>
+                        <td>{{ obj.email }}</td>
+                        <th>
+                            <a class="btn btn-xs btn-primary" href="{% url 'users.edit' role=role pk=obj.pk %}">Edit</a>
+                            <a onclick="return confirm('Are you sure you want to delete this?')"   class="btn btn-xs btn-default" href="{% url 'users.delete' role=role id=obj.pk %}">Delete</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- /.box-body -->
+
+
+        <div class="box-footer clearfix">
+                {% if page_obj.has_other_pages %}
+                <ul class="pagination pagination-sm no-margin pull-right">
+                    {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
+    </div>
+
+
+
+{% endblock %}

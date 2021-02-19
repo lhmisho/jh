@@ -1,0 +1,123 @@
+{% load static %}
+{% load hijack_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--favicon icon-->
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png" sizes="16x16">
+    <title>JoHukum</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="{% static '/bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{% static '/bower_components/Ionicons/css/ionicons.min.css' %}">
+    {{ form.media.css }}
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static '/css/AdminLTE.min.css' %}">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="{% static '/css/skins/_all-skins.min.css' %}">
+    <link rel="stylesheet" href="{% static '/plugins/iCheck/all.css' %}">
+
+    {#    django hijack css #}
+    <link rel="stylesheet" type="text/css" href="{% static 'hijack/hijack-styles.css' %}"/>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+
+    <style type="text/css">
+
+        .filepond--wrapper input[type=file] {
+            display: none !important;
+        }
+    </style>
+
+
+    {% block 'head' %}{% endblock %}
+
+
+</head>
+<body class="{% block 'body-classes' %}{% endblock %}">
+{% hijack_notification %}
+{% block 'body' %}{% endblock %}
+
+<!-- Set config for preact apps -->
+{% csrf_token %}
+<script type="text/javascript">
+    window.config = {
+        csrf_token: document.getElementsByName('csrfmiddlewaretoken')[0].value,
+        user: {
+            is_admin: '{{ request.user.is_admin }}' == 'True'
+        }
+    }
+</script>
+
+
+<!-- jQuery 3 -->
+<script src="{% static '/bower_components/jquery/dist/jquery.min.js' %}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{% static '/bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<!-- SlimScroll -->
+<script src="{% static '/bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+<!-- FastClick -->
+{#    <script src="{% static '/bower_components/fastclick/lib/fastclick.js' %}"></script>#}
+<!-- AdminLTE App -->
+<script src="{% static '/js/adminlte.min.js' %}"></script>
+<script src="{% static '/plugins/iCheck/icheck.min.js' %}"></script>
+<script src="{% static '/js/select2.min.js' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<!-- <script src="{% static '/js/demo.js' %}"></script> -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        //iCheck for checkbox and radio inputs
+        $('input[type="checkbox"], input[type="radio"]').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue'
+        })
+
+        $('button').on('click', function (e) {
+            if ($(this).attr('type') == 'submit' && $(this).attr('name') != 'wizard_goto_step') {
+                var button = this;
+                var form = $(this).parents('form:first');
+                if (form) {
+                    console.log("Submitting form - ", form)
+                    $(form).submit(function () {
+                        $(button).attr('disabled', true)
+                        $(button).html('<i class="fa fa-spinner fa-spin"></i> ' + $(button).html())
+                    })
+                }
+
+            }
+        })
+        $('a').on('click', function (e) {
+
+            if ($(this).attr('href') == '#') return
+
+            $(this).attr('disabled', true)
+            var existing_icon = $(this).find('i.fa')
+            if (existing_icon) {
+                $(existing_icon).attr('class', 'fa fa-spinner fa-spin')
+            } else {
+                $(this).html('<i class="fa fa-spinner fa-spin"></i> ' + $(this).html())
+            }
+        })
+    })
+</script>
+{% block 'js' %}{% endblock %}
+
+{{ form.media.js }}
+</body>
+</html>

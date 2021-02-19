@@ -1,0 +1,8 @@
+<span class="label 
+    {% if record.status == 'PENDING' %} label-warning
+    {% elif record.status == 'REVIEWED' %} label-primary
+    {% elif record.status == 'APPROVED' %} label-success
+    {% else %} label-default {% endif %}">
+    {{ record.get_status_display }}
+    {{ record.status }}
+</span>

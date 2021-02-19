@@ -1,0 +1,20 @@
+{% extends 'layouts/two_column.html' %}
+{% load humanize static %}
+
+{% block 'content-header' %}
+    <h4><i class="fa fa-sitemap"></i> Update Files</h4>
+{% endblock %}
+
+{% block 'content' %}
+    <div id="editor"></div>
+    {% csrf_token %}
+{% endblock %}
+
+{% block 'js' %}
+    <script type="text/javascript" src="{% static 'js_apps/businessDataFileUpload.js' %}"></script>
+    <script type="text/javascript">
+        new BusinessDataFileUpload(document.getElementById('editor'), {
+            pk: "{{ pk }}"
+        })
+    </script>
+{% endblock %}

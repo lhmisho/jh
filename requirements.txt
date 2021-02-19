@@ -1,0 +1,59 @@
+astroid==2.3.3
+Babel==2.7.0
+certifi==2019.11.28
+chardet==3.0.4
+dataclasses==0.7
+-e git+https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/web/dit-common-core.git@b449914861ff3f2d117dfd04e449d9929fd66f20#egg=dit_common_core
+-e git+https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/web/dit_email_addon.git@22874c8f7e56db133232369c1cf4e81e72134bfa#egg=dit_email_addon
+-e git+https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/web/dit_sms_addon.git@c1e4febdcb4d7b374244042e5998bce0c7623d33#egg=dit_sms_addon
+Django==2.1
+django-appconf==1.0.3
+django-compat==1.0.15
+django-cors-headers==3.2.0
+django-countries==5.5
+django-crispy-forms==1.8.1
+django-embed-video==1.3
+django-extensions==2.2.5
+django-filer==1.4.0
+django-filter==2.2.0
+django-formtools==2.1
+django-hijack==2.1.10
+django-hijack-admin==2.1.10
+django-js-asset==1.2.2
+django-jsoneditor==0.1.4
+django-mptt==0.10.0
+django-phonenumber-field==3.0.1
+django-polymorphic==2.0.3
+django-redis==4.10.0
+django-rest-auth==0.9.5
+django-select2==7.1.2
+django-tables2==2.2.1
+django-taggit==1.1.0
+django-treebeard==4.3
+django-widget-tweaks==1.4.5
+djangorestframework==3.10.3
+djongo==1.2.36
+easy-thumbnails==2.6
+-e git+https://github.com/DivineITLimited/django-hyper-editor.git@86c97db895906ce32fb7e2ad8c348f52d913563c#egg=hypereditor
+idna==2.8
+isort==4.3.21
+jsonfield==2.0.2
+lazy-object-proxy==1.4.3
+mccabe==0.6.1
+packaging==19.2
+phonenumbers==8.11.0
+Pillow==6.2.1
+pylint==2.4.4
+pymongo==3.7.1
+pyotp==2.3.0
+pyparsing==2.4.5
+pytz==2019.3
+redis==3.3.11
+requests==2.22.0
+six==1.13.0
+sqlparse==0.2.4
+typed-ast==1.4.0
+Unidecode==1.0.23
+urllib3==1.25.7
+wrapt==1.11.2
+-e git+https://shimul:vyWhqSgMPXByfETWRwGw@git.divineit.net/shimul/zero-auth.git@daed5b636157d380965dc4320f4c51d2fe3fc39d#egg=zero_auth

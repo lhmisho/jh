@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block 'body-classes' %} hold-transition login-page {% endblock %}
+
+{% block 'body' %}
+
+<div class="login-box">
+    <div class="login-logo">
+      <a href="/"><b>Jo</b> Hukum</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+      <p class="login-box-msg">Sign in to start your session</p>
+      <div class="alert alert-warning">
+        <strong>Maximum Retry Excced ({{ max_retry }}) times.</strong>
+        You have been locked out. Try again in {{ remaining|naturaltime }} seconds.
+      </div>
+    </div>
+    <!-- /.login-box-body -->
+  </div>
+{% endblock %}

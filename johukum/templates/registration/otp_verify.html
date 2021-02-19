@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block 'body-classes' %} hold-transition login-page {% endblock %}
+
+{% block 'body' %}
+
+<div class="login-box">
+    <div class="login-logo">
+      <a href="/"><b>Jo</b> Hukum</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="login-box-body">
+      <div class="actions" style="position:relative;right: -20px;top: -20px;">
+        <form method="POST" style="position: absolute;right: 0;top: 0;">
+          {% csrf_token %}
+          <input type="hidden" name="reset" value="true"/>
+          <button type="submit" class="btn pull-right"><i class="fa fa-times"></i></button>
+        </form>
+
+      </div>
+
+      <p class="login-box-msg">Sign in to start your session</p>
+
+      {% include 'partials/form_errors.html' %}
+      {% include 'partials/messages.html' %}
+
+      <form method="post" class="form-inline">
+        {% csrf_token %}
+        {% if METHOD_CURRENT == METHOD_SMS %}
+          <p>Enter 6 Digit Verification Code that has been sent to you via SMS.</p>
+        {% elif METHOD_CURRENT == METHOD_EMAIL %}
+          <p>Enter 6 Digit Verification Code that has been sent to you via Email.</p>
+        {% else %}
+          <p>Enter OTP Code from your Google Authenticator Application</p>
+        {% endif %}
+          <div class="form-group has-feedback">
+            <input type="text" name="code" class="form-control">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-flat">Verify</button>
+          {% if METHOD_CURRENT != METHOD_GOOGLE_AUTHENTICATOR %}
+           <button type="button" id="resetBtn" disabled class="btn btn-default btn-flat">Retry</button>
+          {% endif %}
+      </form>
+      <form method="POST" id="resetForm">
+        {% csrf_token %}
+        <input type="hidden" name="resend" value="true" />
+      </form>
+      <div class="row" style="margin-top:20px">
+          <div class="col-xs-12">
+            <h4>Use other methods</h4>
+            {% if METHOD_CURRENT != METHOD_SMS %}
+            <form method="POST" style="display:inline">
+              {% csrf_token %}
+              <input type="hidden" name="method" value="{{ METHOD_SMS }}" />
+              <button type="submit" class="btn btn-default">Send via SMS</button>
+            </form>
+            {% endif %}
+
+            {% if METHOD_CURRENT != METHOD_EMAIL %}
+            <form method="POST" style="display:inline">
+              {% csrf_token %}
+              <input type="hidden" name="method" value="{{ METHOD_EMAIL }}" />
+              <button type="submit" class="btn btn-default">Send via Email</button>
+            </form>
+            {% endif %}
+            {% if METHOD_CURRENT != METHOD_GOOGLE_AUTHENTICATOR %}
+            <form method="POST" style="display:inline">
+              {% csrf_token %}
+              <input type="hidden" name="method" value="{{ METHOD_GOOGLE_AUTHENTICATOR }}" />
+              <button type="submit" class="btn btn-default">Use Google Authenticator</button>
+            </form>
+            {% endif %}
+
+
+          </div>
+        </div>
+
+      <!-- <a href="register.html" class="text-center">Register a new membership</a> -->
+
+    </div>
+    <!-- /.login-box-body -->
+  </div>
+{% endblock %}
+
+
+
+{% block 'js' %}
+{% if METHOD_CURRENT != METHOD_GOOGLE_AUTHENTICATOR %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#resetBtn').click(function(e) {
+            $("form#resetForm").submit()
+        })
+        var RETRY_IN = parseInt({{ RETRY_IN }})
+        function retry_timeout() {
+            if (RETRY_IN > 0) {
+                $("#resetBtn").html(RETRY_IN + 's')
+                RETRY_IN--
+                setTimeout(retry_timeout, 1000)
+            } else {
+                $("#resetBtn").html('Retry')
+                $("#resetBtn").removeAttr('disabled')
+            }
+        }
+
+        if (RETRY_IN > 0) {
+            setTimeout(retry_timeout, 0)
+        } else {
+            $("#resetBtn").html('Retry')
+            $("#resetBtn").removeAttr('disabled')
+        }
+    })
+</script>
+{% endif %}
+{% endblock 'js' %}

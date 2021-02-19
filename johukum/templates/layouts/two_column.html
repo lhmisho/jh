@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block 'head' %}
+<title>{% block 'title' %}{% endblock %}</title>
+{% block 'css' %}{% endblock%}
+{% endblock %}
+
+{% block 'body-classes'%} hold-transition skin-purple fixed sidebar-mini {% endblock %}
+
+{% block 'body' %}
+
+<!-- Site wrapper -->
+<div class="wrapper">
+
+  {% include 'partials/header.html' %}
+
+  {% include 'partials/sidebar.html' %}
+    
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      {% block 'content-header' %}{% endblock%}
+    </section>
+
+    
+    <!-- Main content -->
+    <section class="content">
+        {% include 'partials/messages.html' %}
+      {% block 'content' %}{% endblock %}
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  {% include 'partials/footer.html' %}
+
+</div>
+<!-- ./wrapper -->
+{% endblock %}

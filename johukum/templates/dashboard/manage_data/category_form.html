@@ -1,0 +1,9 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks %}
+
+{% block 'custom_layout' %}
+    <div style="margin-bottom:20px">
+        <label>{{ form.categories.label }} </label>
+        {% render_field form.categories class='form-control' %}   
+    </div>
+{% endblock %}

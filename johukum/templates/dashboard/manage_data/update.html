@@ -1,0 +1,21 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize widget_tweaks static %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-th"></i> Update Business Info</h4>
+{% endblock %}
+
+{% block 'content' %}
+    {% csrf_token %}
+    <div id="businessInfoWizard"></div>
+{% endblock %}
+
+{% block 'js' %}
+    <script type="text/javascript" src="{% static 'js_apps/businessDataEdit.js' %}"></script>
+    <script type="text/javascript">
+        new BusinessDataEdit(document.getElementById('businessInfoWizard'), {
+            'id': '{{ id }}'
+        })
+    </script>
+{% endblock %}

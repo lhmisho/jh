@@ -1,0 +1,32 @@
+{% extends 'dashboard/manage_data/form_wizard.html' %}
+{% load widget_tweaks static custom_tags %}
+
+{% block 'title' %}{% endblock %}
+{% block 'css' %}
+    <link rel="stylesheet" href="{% static 'plugins/timepicker/bootstrap-timepicker.min.css' %}" />
+{% endblock%}
+
+{% block 'custom_layout' %}
+{{ form.management_form }}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-grou">
+            {{ form.as_p }}
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block 'js' %}
+    <script type="text/javascript" src="{% static 'plugins/timepicker/bootstrap-timepicker.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.timepicker').timepicker({
+                showInputs: false
+            })
+        })
+    </script>
+{% endblock%}

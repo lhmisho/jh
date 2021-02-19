@@ -1,0 +1,114 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize widget_tweaks %}
+
+{% block 'content-header' %}
+    <h4><i class="fa fa-th"></i> {{ obj.store_name }}</h4>
+{% endblock %}
+
+{% block 'content' %}
+    <div class="row">
+
+        <div class="col-xs-12 col-md-10 col-md-offset-1">
+            <div class="box col-xs-12 col-md-12">
+                <div class="box-header col-md-12" style="background: #dddddd;">
+                    <a href="{% url 'mobile_data.index' %}" class="btn btn-primary btn-sm">
+                        <i class="fa fa-list"></i>
+                    </a>
+                    <a class="btn btn-primary" href="{% url 'mobile_data.update' id=obj.pk %}">Edit</a>
+                    {% if not request.user.is_agent %}
+                        <form method="POST" class="pull-right">
+                            {% csrf_token %}
+                            <input type="hidden" name='mobile_data_id' value="{{ obj.pk }}">
+                            <input type="hidden" name='status' value="{{ obj.REJECTED }}">
+                            <button type="submit" class="btn btn-default"><i class="fa fa-times"></i> REJECT
+                            </button>
+                        </form>
+                        {% if obj.status == obj.PENDING or obj.status == obj.REJECTED %}
+                            <form method="POST" class="pull-right" style="margin-right:10px">
+                                {% csrf_token %}
+                                <input type="hidden" name='mobile_data_id' value="{{ obj.pk }}">
+                                <input type="hidden" name='status' value="{{ obj.REVIEWED }}">
+                                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> REVIEWED
+                                </button>
+                            </form>
+                        {% endif %}
+
+                        {% if obj.status == obj.REVIEWED %}
+                            {% if request.user.is_admin or request.user.is_editor %}
+                                <form method="POST" class="pull-right" style="margin-right:10px">
+                                    {% csrf_token %}
+                                    <input type="hidden" name='mobile_data_id' value="{{ obj.pk }}">
+                                    <input type="hidden" name='status' value="{{ obj.APPROVED }}">
+                                    <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>
+                                        Approve
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+
+                    {% endif %}
+                </div>
+                <div class="col-md-10 mx-auto">
+                    <div class="box-header">
+                        <h1 class="">{{ obj.store_name }}</h1>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h4><strong>Name:</strong> {{ obj.name }}</h4>
+                                <h4><strong>Designation:</strong> {{ obj.designation }}</h4>
+                                <h4><strong>Email:</strong> {{ obj.email }}</h4>
+                                <h4><strong>Location:</strong> {{ obj.location.to_string }}</h4>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <h4><strong>Mobile Numbers:</strong>
+                                    <ul>
+                                        {% for mobile_number in obj.numbers %}
+                                            <li style="padding: 5px;">{{ mobile_number }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </h4>
+                                <h4><strong>Land Line Numbers:</strong>
+                                    <ul>
+                                        {% for number in obj.land_line_numbers %}
+                                            <li style="padding: 5px;">{{ number }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </h4>
+                            </div>
+                            <div class="col-sm-12">
+                                <h4><strong>Categories: </strong>
+                                    <ul>
+                                        <div class="box-body" style="margin: 3px;">
+                                            {% for item in obj.categories.all %}
+                                                <span class="label label-primary"
+                                                      style="margin-right: 3px;">{{ item.name }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </ul>
+                                </h4>
+                                <div class="row" style="margin-top:10px; margin-bottom:10px">
+                                    <div class="col-sm-12">
+                                        <h4><strong>Profile photos: </strong></h4>
+                                        {% for image in obj.photos.all %}
+                                            <div class="col-md-6">
+                                                <img src="{{ image }}" class="img-responsive"/>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+
+
+
+{% endblock %}

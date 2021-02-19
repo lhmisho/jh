@@ -1,0 +1,6 @@
+<a class="btn btn-xs btn-info" href="{% url 'manage_data.show' id=record.pk %}">View</a>
+{% if request.user.is_admin %}
+<button class="btn btn-xs btn-default deleteButton" data-url="{% url 'manage_data.delete' id=record.pk %}">Delete</button>
+{% elif request.user.is_agent and record.status != record.APPROVED %}
+<button class="btn btn-xs btn-default deleteButton" data-url="{% url 'manage_data.delete' id=record.pk %}">Delete</button>
+{% endif %}

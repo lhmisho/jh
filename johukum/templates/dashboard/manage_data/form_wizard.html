@@ -1,0 +1,65 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load widget_tweaks %}
+
+{% block 'css' %}
+<style type="text/css">
+    .hop_wrapper {
+        border-bottom: 1px solid #eee;
+    }
+</style>
+{% endblock %}
+{% block 'content-header' %}
+<h4>{% if update %} Update {% else %} New {% endif %} Business Info</h4>
+{% endblock %}
+
+{% block 'content' %}
+    <div class="row">
+        <div class="{% if not update %} col-md-8 col-md-offset-2 {% else %} col-md-6 col-md-offset-3 {% endif %}">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h4 class="box-title">
+                        {% if update %}
+                            Update Business Info
+                        {% else %}
+                            Step: {{ wizard.steps.step1 }}
+                        {% endif %}
+                    </h4>
+                </div>
+
+                {% include 'partials/form_errors.html' %}
+
+                    <div class="box-body">
+                        <div class="col-md-{% if not update %}8{% else %}12{% endif %}">
+                            <form method="post" {% block 'enctype' %}{% endblock %}>
+                                {% csrf_token %}
+                                {% if not update %}
+                                    {{ wizard.management_form }}
+                                {% endif %}
+                                {% block 'custom_layout' %}{% endblock %}
+
+                                {% if not update %}
+                                <div class="form-group">
+                                    {% if wizard.steps.prev %}
+                                        <button name="wizard_goto_step" class="btn btn-default" type="submit" value="{{ wizard.steps.prev }}">Prev Step</button>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-primary">Next</button>
+                                </div>
+                                {% else %}
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                                {% endif %}
+                            </form>
+                        </div>
+                        {% if not update %}
+                        <div class="col-md-4">
+                            {% include 'dashboard/manage_data/form_steps.html' with step=wizard.steps.step1 %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

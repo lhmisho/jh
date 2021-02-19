@@ -1,0 +1,348 @@
+{% extends 'layouts/two_column.html' %}
+
+{% load humanize widget_tweaks custom_tags %}
+
+{% block 'content-header' %}
+<h4><i class="fa fa-th"></i> New Mobile Information</h4>
+{% endblock %}
+
+{% block 'content' %}
+<div class="row">
+    <div class="col-xs-12 col-md-4 col-md-offset-4">
+        <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Create New</h3>
+
+            <div class="box-tools">
+                <a href="{% url 'mobile_data.index' %}" class="btn btn-primary btn-sm pull-right">
+                    <i class="fa fa-grid"></i> List
+                </a>
+            </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+                {% include 'partials/form_errors.html' %}
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>{{ form.name.label }}</label>
+                                    {% render_field form.name id="name" class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>{{ form.designation.label }}</label>
+                                    {% render_field form.designation id="designation" class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>{{ form.email.label }}</label>
+                                    {% render_field form.email id="email" class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>{{ form.categories.label }}</label>
+                                    {% render_field form.categories id="categories" class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>Profile Pictures</label>
+                                    {% render_field form.photo1 class='form-control' %}
+                                    {% render_field form.photo2 class='form-control' %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>{{ form.store_name.label }}</label>
+                                    {% render_field form.store_name id="store_name" class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <div class="form-group">
+                                    <label>{{ form.division.label }}</label>
+                                    {% render_field form.division id="division" class="form-control" %}
+                                </div>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label>{{ form.city.label }}</label>
+                                {% render_field form.city id="city" class="form-control" %}
+                            </div>
+
+                            <div class="col-sm-12 form-group">
+                                <label>{{ form.thana.label }}</label>
+                                {% render_field form.thana id="thana" class="form-control" %}
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label>{{ form.address.label }}</label>
+                                {% render_field form.address id="address" class="form-control" %}
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label>Mobile Number</label>
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="mobile_number_input" />
+                                        <span class="text-danger" style="display:none" id="mn_error_text">Invalid Mobile Number</span>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button class="btn btn-info btn-sm" id="addNumber" type="button"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <ul class="list-group" id="selectedNumbers" style="margin-top:10px">
+                                </ul>
+                            </div>
+                            <div class="col-sm-12 form-group">
+                                <label>Land Line Number</label>
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="land_line_number_input" />
+                                        <span class="text-danger" style="display:none" id="lln_error_text">Invalid Land Line Number</span>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button class="btn btn-info btn-sm" id="addNumber2" type="button"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <ul class="list-group" id="selectedNumbers2" style="margin-top:10px">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+
+{% block 'js' %}
+<script type="text/javascript">
+    var NUMBERS = []
+    var VERIFY_URL = '/api/v1/validate_phone_number'
+    function build_item(number) {
+        return `
+            <li class="list-group-item">
+                ${number}
+                <input type="hidden" name="mobile_numbers[]" value="${number}" />
+                <button type="button" class="btn-xs btn-danger pull-right" onclick="remove_number('${number}')">
+                    <i class="fa fa-times"></i>
+                </button>
+            </li>
+        `
+    }
+
+    function remove_number(number) {
+        var index = NUMBERS.indexOf(number);
+        if (index > -1) {
+            NUMBERS.splice(index, 1);
+            build()
+        }
+    }
+
+    function build() {
+        var html_to_add = ''
+        for(var i=0; i<NUMBERS.length; i++){
+            html_to_add += build_item(NUMBERS[i])
+        }
+        $('#selectedNumbers').html(html_to_add)
+    }
+
+    function add_number_from_input() {
+        var val = $('input[name=mobile_number_input]').val()
+        val = val.trim()
+        if (val != '' && NUMBERS.indexOf(val) == -1) {
+            fetch(VERIFY_URL + '?phone_number='+val, {
+                credentials: 'same-origin'
+            }).then(function(response) {
+                return response.json()
+            }).then(function (response) {
+                if (response.valid) {
+                    NUMBERS.push(val)
+                    $('input[name=mobile_number_input]').val('')
+                    $('#mn_error_text').hide()
+                    build()
+                } else {
+                    $('#mn_error_text').fadeIn()
+                }
+            })
+        }
+    }
+    $(document).ready(function() {
+
+
+        $('input[name=mobile_number_input]').keypress(function(event) {
+            if(event.keyCode == 13){
+                event.preventDefault()
+                add_number_from_input()
+            }
+        })
+
+        $('#addNumber').on('click', function() {
+            add_number_from_input()
+        })
+
+        {% comment %} {% if form.instance %}
+            {% for contact_number in form.instance.mobile_numbers %}
+                NUMBERS.push('{{ contact_number.mobile_number }}')
+            {% endfor %}
+            build()
+        {% endif %} {% endcomment %}
+
+        {% if request.POST %}
+            {% call_method request.POST 'getlist' 'mobile_numbers[]' as lst %}
+            NUMBERS = {{ lst|safe }}
+            build()
+        {% endif %}
+    })
+</script>
+
+<script type="text/javascript">
+    var LAND_LINE_NUMBERS = []
+    var URL = '/api/v1/validate_land_line_number'
+    function build_item_two(land_line_number) {
+        return `
+            <li class="list-group-item">
+                ${land_line_number}
+                <input type="hidden" name="land_line_numbers[]" value="${land_line_number}" />
+                <button type="button" class="btn-xs btn-danger pull-right" onclick="remove_number_two('${land_line_number}')">
+                    <i class="fa fa-times"></i>
+                </button>
+            </li>
+        `
+    }
+
+    function remove_number_two(land_line_number) {
+        var index = LAND_LINE_NUMBERS.indexOf(land_line_number);
+        if (index > -1) {
+            LAND_LINE_NUMBERS.splice(index, 1);
+            build_two()
+        }
+    }
+
+    function build_two() {
+        var html_to_add = ''
+        for(var i=0; i<LAND_LINE_NUMBERS.length; i++){
+            html_to_add += build_item_two(LAND_LINE_NUMBERS[i])
+        }
+        $('#selectedNumbers2').html(html_to_add)
+    }
+
+    function add_number_from_input_two() {
+        var val = $('input[name=land_line_number_input]').val()
+        val = val.trim()
+        if (val != '' && LAND_LINE_NUMBERS.indexOf(val) == -1) {
+            fetch(URL + '?land_line_number='+val, {
+                credentials: 'same-origin'
+            }).then(function(response) {
+                return response.json()
+            }).then(function (response) {
+                if (response.valid) {
+                    LAND_LINE_NUMBERS.push(val)
+                    $('input[name=land_line_number_input]').val('')
+                    $('#lln_error_text').hide()
+                    build_two()
+                } else {
+                    $('#lln_error_text').fadeIn()
+                }
+            })
+        }
+    }
+    $(document).ready(function() {
+
+
+        $('input[name=land_line_number_input]').keypress(function(event) {
+            if(event.keyCode == 13){
+                event.preventDefault()
+                add_number_from_input_two()
+            }
+        })
+
+        $('#addNumber2').on('click', function() {
+            add_number_from_input_two()
+        })
+
+        {% comment %} {% if form.instance %}
+            {% for contact_number in form.instance.mobile_numbers %}
+                NUMBERS.push('{{ contact_number.mobile_number }}')
+            {% endfor %}
+            build()
+        {% endif %} {% endcomment %}
+
+        {% if request.POST %}
+            {% call_method request.POST 'getlist' 'land_line_numbers[]' as lst %}
+            LAND_LINE_NUMBERS = {{ lst|safe }}
+            build_two()
+        {% endif %}
+    })
+</script>
+
+
+
+<script type="text/javascript">
+
+    var LOCATION_URL = '/api/v1/locations/'
+    function get_location_data(parent, location_type, callback) {
+        fetch(LOCATION_URL + '?parent='+parent+'&location_type='+location_type, {credentials: "same-origin"})
+        .then(function(response) {
+            return response.json()
+        }).then(function(data) {
+            callback(data)
+        })
+    }
+
+    function result_to_options(result) {
+        var options = ''
+        for(var i = 0; i<result.results.length; i++) {
+            options += `<option value='${result.results[i]._id}'>${result.results[i].name}</option>`
+        }
+        return options
+    }
+
+    function change_city(e) {
+        var selected_division = $('#division :selected').val()
+        get_location_data(selected_division, 2, function (data) {
+            var options = result_to_options(data)
+            $('#city').html(options)
+            change_thana()
+        })
+
+    }
+
+    function change_thana(e) {
+        var selected_city = $('#city').val()
+        get_location_data(selected_city, 4, function (data) {
+            var options = result_to_options(data)
+            $('#thana').html(options)
+        })
+    }
+
+    $(document).ready(function () {
+
+        // change city on division change
+        $('#division').change(change_city)
+
+        // change thana on city change
+        $('#city').change(change_thana)
+    })
+
+</script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARLJBKcxL-NfKpwRiIP_SV3ngr9dHm0Fo&callback=initMap"
+async defer></script> -->
+{% endblock %}
